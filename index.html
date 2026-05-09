@@ -448,7 +448,7 @@
             el.innerHTML = `
                 <div class="relative bg-white p-4 rounded-[2rem] shadow-md border border-gray-100 w-full text-center">
                     <div class="text-[9px] font-bold text-gray-300 mb-1 uppercase tracking-widest">הזמנה</div>
-                    <div class="text-3xl font-black text-gray-800 text-left w-full" dir="ltr">${exercise.text}</div>
+                    <div class="text-3xl font-black text-gray-800 text-center w-full" dir="ltr">${exercise.text}</div>
                     <div class="w-full h-1.5 bg-gray-100 rounded-full mt-3 overflow-hidden">
                         <div class="progress-bar h-full bg-green-500 w-full"></div>
                     </div>
@@ -553,6 +553,8 @@
         }
 
         function switchAnswerRange() {
+            customers.forEach(c => c.el.remove());
+            customers = [];
             if (answerRangeStart === 1) {
                 answerRangeStart = 11;
                 answerRangeEnd = 20;
