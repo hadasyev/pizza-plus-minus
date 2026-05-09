@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>פיצה פלוס מינוס</title>
+    <title>פיצה פלוס־מינוס</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -176,7 +176,7 @@
     <!-- Setup Screen -->
     <div id="setup-screen" class="overlay">
         <div class="text-7xl mb-4 animate-bounce">🍕</div>
-        <h1 class="text-4xl font-black text-gray-800 mb-2 tracking-tight">פיצה פלוס מינוס: אלופי המטבח!</h1>
+        <h1 class="text-4xl font-black text-gray-800 mb-2 tracking-tight">פיצה פלוס־מינוס: אלופי המטבח!</h1>
         <p class="text-gray-600 mb-8 px-8 max-w-sm text-lg italic">
             הלקוחות כבר בדרך והפיצות מחכות – בואו נראה אתכם פותרים תרגילים בשיא המהירות!
         </p>
@@ -204,7 +204,7 @@
         <div class="text-7xl mb-6">🍕</div>
         <h2 id="welcome-title" class="text-4xl font-black text-gray-800 mb-4"></h2>
         <div id="welcome-text" class="text-lg text-gray-600 mb-8 max-w-md mx-auto px-6 leading-relaxed"></div>
-        <div class="flex gap-4 text-4xl mb-10 opacity-80">🔥 🧀 🍅</div>
+        <div class="flex gap-4 text-4xl mb-10 opacity-80">🍅🧀🔥</div>
         <button onclick="startGame()" class="bg-orange-500 text-white px-14 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-orange-600 hover:-translate-y-1 transition-all">
             נתחיל להכין פיצה!
         </button>
@@ -263,6 +263,8 @@
         let spawnInterval = 4200, sessionStreak = 0;
         let badgesCollected = 0;
         let lastTouchEnd = 0;
+        let answerRangeStart = 1;
+        let answerRangeEnd = 10;
 
         const badges = [
             { icon: '⛲', name: 'תג המזרקה' }, { icon: '🦄', name: 'תג החד־קרן' },
@@ -297,7 +299,7 @@
 
             document.getElementById('welcome-text').innerHTML = `
                 <p class="mb-4">כדי להכין פיצה מושלמת, צריך להיות ${t('מהיר ומדויק', 'מהירה ומדויקת')}!</p>
-                <p class="font-bold text-orange-600 italic">איך מכינים פיצה? ${t('לחץ', 'לחצי')} על התשובה הנכונה לתרגיל של הלקוח.</p>
+                <p class="font-bold text-orange-600 italic">איך מכינים פיצה? ${t('לחץ', 'לחצי')} על הפתרון הנכון לתרגיל של הלקוח.</p>
                 <p class="mt-4">רצף של עשר פיצות שווה תג מיוחד! צבירת ארבעה תגים הופכת אותך ל${t('מאסטר חשבון רשמי', 'מאסטרית חשבון רשמית')}.</p>
             `;
 
@@ -306,7 +308,7 @@
 
         function init() {
             plateContainer.innerHTML = '';
-            for (let i = 1; i <= 20; i++) {
+            for (let i = answerRangeStart; i <= answerRangeEnd; i++) {
                 const p = document.createElement('button');
                 p.className = "pizza-plate aspect-square bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center font-black text-xl sm:text-2xl text-gray-600 hover:bg-orange-50/50 active:bg-gray-100 transition-colors";
                 p.innerText = i;
@@ -357,19 +359,28 @@
         }
 
         function createExercise() {
+            const target = Math.floor(Math.random() * (answerRangeEnd - answerRangeStart + 1)) + answerRangeStart;
             const isAddition = Math.random() < 0.55;
-            let n1, n2, target, operation;
+            let n1, n2, operation;
 
             if (isAddition) {
                 operation = '+';
-                n1 = Math.floor(Math.random() * 19) + 1;
-                n2 = Math.floor(Math.random() * (20 - n1)) + 1;
-                target = n1 + n2;
+                n1 = Math.floor(Math.random() * target);
+                n2 = target - n1;
+
+                if (n1 === 0) {
+                    n1 = 1;
+                    n2 = target - 1;
+                }
             } else {
                 operation = '-';
-                n1 = Math.floor(Math.random() * 19) + 2;
-                n2 = Math.floor(Math.random() * (n1 - 1)) + 1;
-                target = n1 - n2;
+                n2 = Math.floor(Math.random() * 10) + 1;
+                n1 = target + n2;
+
+                if (n1 > 20) {
+                    n1 = 20;
+                    n2 = n1 - target;
+                }
             }
 
             return {
@@ -437,7 +448,7 @@
             el.innerHTML = `
                 <div class="relative bg-white p-4 rounded-[2rem] shadow-md border border-gray-100 w-full text-center">
                     <div class="text-[9px] font-bold text-gray-300 mb-1 uppercase tracking-widest">הזמנה</div>
-                    <div class="text-3xl font-black text-gray-800 dir="ltr"">${exercise.text}</div>
+                    <div class="text-3xl font-black text-gray-800 text-left w-full" dir="ltr">${exercise.text}</div>
                     <div class="w-full h-1.5 bg-gray-100 rounded-full mt-3 overflow-hidden">
                         <div class="progress-bar h-full bg-green-500 w-full"></div>
                     </div>
@@ -537,7 +548,20 @@
                 shelf.appendChild(bEl);
 
                 badgesCollected++;
+                switchAnswerRange();
             };
+        }
+
+        function switchAnswerRange() {
+            if (answerRangeStart === 1) {
+                answerRangeStart = 11;
+                answerRangeEnd = 20;
+            } else {
+                answerRangeStart = 1;
+                answerRangeEnd = 10;
+            }
+
+            init();
         }
 
         function closeSurprise() { 
@@ -590,6 +614,7 @@
 
         function restartGame() {
             score = 0; streak = 0; lives = 3; sessionStreak = 0; spawnInterval = 4200; badgesCollected = 0; multiplier = false;
+            answerRangeStart = 1; answerRangeEnd = 10;
             customers.forEach(c => c.el.remove()); customers = [];
             document.getElementById('badge-shelf').innerHTML = '';
             document.getElementById('served-dish').innerText = '';
