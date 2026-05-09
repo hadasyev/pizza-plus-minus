@@ -163,13 +163,7 @@
     <main id="game-canvas" class="flex-1 min-h-0 w-full max-w-4xl relative flex items-start justify-around pt-6 sm:pt-12 px-4 sm:px-6">
     </main>
 
-    <section id="counter-area" class="w-full japandi-wood relative flex flex-col items-center justify-end pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-8 z-40" style="height: clamp(210px, 34dvh, 310px);">
-        <div class="absolute -top-12 flex items-center gap-8">
-            <div id="chopping-block" class="w-28 h-14 bg-white/95 rounded-xl border-2 border-dashed border-orange-200 flex items-center justify-center shadow-md">
-                <div class="text-3xl text-orange-300 font-black">?</div>
-            </div>
-            <div id="served-dish" class="w-14 h-14 bg-white rounded-full border-2 border-orange-50 shadow-sm flex items-center justify-center text-3xl transition-all duration-300"></div>
-        </div>
+    <section id="counter-area" class="w-full japandi-wood relative flex flex-col items-center justify-end pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-8 z-40" style="height: clamp(170px, 28dvh, 260px);">
         <div class="grid grid-cols-5 sm:grid-cols-10 gap-2 sm:gap-3 px-6 w-full max-w-3xl"></div>
     </section>
 
@@ -204,7 +198,7 @@
         <div class="text-7xl mb-6">🍕</div>
         <h2 id="welcome-title" class="text-4xl font-black text-gray-800 mb-4"></h2>
         <div id="welcome-text" class="text-lg text-gray-600 mb-8 max-w-md mx-auto px-6 leading-relaxed"></div>
-        <div class="flex gap-4 text-4xl mb-10 opacity-80">🍅🧀🔥</div>
+        <div class="flex gap-4 text-4xl mb-10 opacity-80">🍅 🧀 🔥</div>
         <button onclick="startGame()" class="bg-orange-500 text-white px-14 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-orange-600 hover:-translate-y-1 transition-all">
             נתחיל להכין פיצה!
         </button>
@@ -272,8 +266,6 @@
             { icon: '🧺', name: 'תג הפיקניק' }, { icon: '🪭', name: 'תג המניפה' },
             { icon: '🌈', name: 'תג הקשת' }, { icon: '🐇', name: 'תג הארנבת' }
         ];
-        const pizzaIcons = ['🍕'];
-
         const canvas = document.getElementById('game-canvas');
         const plateContainer = document.querySelector('#counter-area .grid');
         const scoreDisp = document.getElementById('score'), streakDisp = document.getElementById('streak');
@@ -406,8 +398,6 @@
                 const c = customers[customerIdx];
                 score += (multiplier ? 20 : 10);
                 streak++; sessionStreak++;
-
-                document.getElementById('served-dish').innerText = pizzaIcons[Math.floor(Math.random() * pizzaIcons.length)];
                 showToast('יאמי! 😋');
 
                 c.el.style.transform = "scale(0) translateY(-60px)";
@@ -430,8 +420,6 @@
                 streak = 0; sessionStreak = 0;
                 toggleMultiplier(false);
                 showToast('אופס, טעות! ❌');
-                document.getElementById('chopping-block').classList.add('border-red-300');
-                setTimeout(() => document.getElementById('chopping-block').classList.remove('border-red-300'), 500);
                 streakDisp.innerText = streak;
             }
         }
@@ -619,7 +607,6 @@
             answerRangeStart = 1; answerRangeEnd = 10;
             customers.forEach(c => c.el.remove()); customers = [];
             document.getElementById('badge-shelf').innerHTML = '';
-            document.getElementById('served-dish').innerText = '';
             scoreDisp.innerText = 0; streakDisp.innerText = 0;
             updateLivesUI(); toggleMultiplier(false);
             document.getElementById('game-over').style.display = 'none';
