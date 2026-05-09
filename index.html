@@ -254,7 +254,7 @@
         let userGender = "male";
         let score = 0, streak = 0, lives = 3, customers = [];
         let multiplier = false, lastSpawn = 0, isRunning = false, isPaused = false;
-        let spawnInterval = 4200, sessionStreak = 0;
+        let spawnInterval = 3200, sessionStreak = 0;
         let badgesCollected = 0;
         let lastTouchEnd = 0;
         let answerRangeStart = 1;
@@ -479,7 +479,7 @@
                     setTimeout(showSurprise, 600);
                 }
 
-                spawnInterval = Math.max(1600, 4200 - (score * 5.2));
+                spawnInterval = Math.max(1600, 3200 - (score * 5.2));
             } else {
                 streak = 0; sessionStreak = 0;
                 toggleMultiplier(false);
@@ -674,7 +674,7 @@
         }
 
         function restartGame() {
-            score = 0; streak = 0; lives = 3; sessionStreak = 0; spawnInterval = 4200; badgesCollected = 0; multiplier = false;
+            score = 0; streak = 0; lives = 3; sessionStreak = 0; spawnInterval = 3200; badgesCollected = 0; multiplier = false;
             answerRangeStart = 1; answerRangeEnd = 10;
             currentLevel = 1;
             customers.forEach(c => c.el.remove()); customers = [];
