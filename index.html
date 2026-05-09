@@ -259,6 +259,7 @@
         let lastTouchEnd = 0;
         let answerRangeStart = 1;
         let answerRangeEnd = 10;
+        let currentLevel = 1;
 
         const badges = [
             { icon: '⛲', name: 'תג המזרקה' }, { icon: '🦄', name: 'תג החד־קרן' },
@@ -351,27 +352,90 @@
         }
 
         function createExercise() {
-            const target = Math.floor(Math.random() * (answerRangeEnd - answerRangeStart + 1)) + answerRangeStart;
-            const isAddition = Math.random() < 0.55;
-            let n1, n2, operation;
+            let n1, n2, operation, target;
 
-            if (isAddition) {
-                operation = '+';
-                n1 = Math.floor(Math.random() * target);
-                n2 = target - n1;
+            if (currentLevel === 1) {
+                const isAddition = Math.random() < 0.6;
 
-                if (n1 === 0) {
-                    n1 = 1;
-                    n2 = target - 1;
+                if (isAddition) {
+                    operation = '+';
+                    n1 = Math.floor(Math.random() * 8) + 1;
+                    n2 = Math.floor(Math.random() * (10 - n1)) + 1;
+                    target = n1 + n2;
+                } else {
+                    operation = '-';
+                    n1 = Math.floor(Math.random() * 9) + 2;
+                    n2 = Math.floor(Math.random() * (n1 - 1)) + 1;
+                    target = n1 - n2;
                 }
-            } else {
-                operation = '-';
-                n2 = Math.floor(Math.random() * 10) + 1;
-                n1 = target + n2;
+            }
 
-                if (n1 > 20) {
-                    n1 = 20;
-                    n2 = n1 - target;
+            else if (currentLevel === 2) {
+                const isAddition = Math.random() < 0.6;
+
+                if (isAddition) {
+                    operation = '+';
+                    n1 = Math.floor(Math.random() * 8) + 3;
+                    n2 = Math.floor(Math.random() * 8) + 3;
+
+                    while (n1 + n2 <= 10 || n1 + n2 > 20) {
+                        n1 = Math.floor(Math.random() * 8) + 3;
+                        n2 = Math.floor(Math.random() * 8) + 3;
+                    }
+
+                    target = n1 + n2;
+                } else {
+                    operation = '-';
+                    n1 = Math.floor(Math.random() * 9) + 11;
+                    n2 = Math.floor(Math.random() * 9) + 1;
+                    target = n1 - n2;
+
+                    while (target < 11 || target > 20) {
+                        n1 = Math.floor(Math.random() * 9) + 11;
+                        n2 = Math.floor(Math.random() * 9) + 1;
+                        target = n1 - n2;
+                    }
+                }
+            }
+
+            else if (currentLevel === 3) {
+                operation = '-';
+                n1 = Math.floor(Math.random() * 9) + 11;
+                n2 = Math.floor(Math.random() * 9) + 1;
+                target = n1 - n2;
+
+                while (target < 1 || target > 10) {
+                    n1 = Math.floor(Math.random() * 9) + 11;
+                    n2 = Math.floor(Math.random() * 9) + 1;
+                    target = n1 - n2;
+                }
+            }
+
+            else {
+                const isAddition = Math.random() < 0.5;
+
+                if (isAddition) {
+                    operation = '+';
+                    n1 = Math.floor(Math.random() * 7) + 4;
+                    n2 = Math.floor(Math.random() * 7) + 4;
+                    target = n1 + n2;
+
+                    while (target < 11 || target > 20) {
+                        n1 = Math.floor(Math.random() * 7) + 4;
+                        n2 = Math.floor(Math.random() * 7) + 4;
+                        target = n1 + n2;
+                    }
+                } else {
+                    operation = '-';
+                    n1 = Math.floor(Math.random() * 9) + 11;
+                    n2 = Math.floor(Math.random() * 9) + 2;
+                    target = n1 - n2;
+
+                    while (target < 11 || target > 20) {
+                        n1 = Math.floor(Math.random() * 9) + 11;
+                        n2 = Math.floor(Math.random() * 9) + 2;
+                        target = n1 - n2;
+                    }
                 }
             }
 
@@ -543,12 +607,19 @@
         function switchAnswerRange() {
             customers.forEach(c => c.el.remove());
             customers = [];
-            if (answerRangeStart === 1) {
-                answerRangeStart = 11;
-                answerRangeEnd = 20;
-            } else {
+
+            currentLevel++;
+
+            if (currentLevel > 4) {
+                currentLevel = 1;
+            }
+
+            if (currentLevel === 1 || currentLevel === 3) {
                 answerRangeStart = 1;
                 answerRangeEnd = 10;
+            } else {
+                answerRangeStart = 11;
+                answerRangeEnd = 20;
             }
 
             init();
@@ -605,6 +676,7 @@
         function restartGame() {
             score = 0; streak = 0; lives = 3; sessionStreak = 0; spawnInterval = 4200; badgesCollected = 0; multiplier = false;
             answerRangeStart = 1; answerRangeEnd = 10;
+            currentLevel = 1;
             customers.forEach(c => c.el.remove()); customers = [];
             document.getElementById('badge-shelf').innerHTML = '';
             scoreDisp.innerText = 0; streakDisp.innerText = 0;
